@@ -4,7 +4,7 @@ set -e
 ARMA_PATH="/arma2"
 STEAM_USER=${STEAM_USER:-anonymous}
 STEAM_PASS=${STEAM_PASS:-""}
-STEAM_GUARD=${STEAM_GUARD:-""}   # For 2FA codes
+STEAM_GUARD=${STEAM_GUARD:-""}
 CONFIG=${CONFIG:-server.cfg}
 PORT=${PORT:-2302}
 MODS=${MODS:-""}
