@@ -1,0 +1,12 @@
+#ignore the following files
+.env
+
+# Temporary files
+*.tmp
+*.log
+*.pid
+
+# Archives
+*.7z
+*.zip
+*.tar.gz
