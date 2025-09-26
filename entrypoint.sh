@@ -1,37 +1,27 @@
 #!/bin/bash
+
+# Exit on error
 set -e
 
-ARMA_PATH="/arma2"
-STEAM_USER=${STEAM_USER:-anonymous}
-STEAM_PASS=${STEAM_PASS:-""}
-STEAM_GUARD=${STEAM_GUARD:-""}
-CONFIG=${CONFIG:-server.cfg}
-PORT=${PORT:-2302}
-MODS=${MODS:-""}
+# 1. Configure and start MySQL
+echo "Starting MySQL..."
+service mysql start
 
-cd /steam
+# 2. Create database and user
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS dayz_epoch;"
+mysql -u root -e "CREATE USER IF NOT EXISTS 'dayz'@'localhost' IDENTIFIED BY 'dayz';"
+mysql -u root -e "GRANT ALL PRIVILEGES ON dayz_epoch.* TO 'dayz'@'localhost';"
+mysql -u root -e "FLUSH PRIVILEGES;"
 
-echo ">>> Logging in as $STEAM_USER"
-if [ -n "$STEAM_GUARD" ]; then
-  ./steamcmd.sh +@sSteamCmdForcePlatformType windows \
-    +login "$STEAM_USER" "$STEAM_PASS" "$STEAM_GUARD" \
-    +force_install_dir $ARMA_PATH \
-    +app_update 33930 validate \
-    +quit
-else
-  ./steamcmd.sh +@sSteamCmdForcePlatformType windows \
-    +login "$STEAM_USER" "$STEAM_PASS" \
-    +force_install_dir $ARMA_PATH \
-    +app_update 33930 validate \
-    +quit
-fi
+# 3. Import database schema
+echo "Importing database schema..."
+mysql -u dayz -pdayz dayz_epoch < /home/dayz/server/sql/database.sql
 
-echo ">>> Starting Arma 2 OA Dedicated Server..."
-cd $ARMA_PATH
+# 4. Start the DayZ Epoch server
+echo "Starting DayZ Epoch server..."
+cd /home/dayz/server
+./restarter.pl
 
-exec wine arma2oaserver.exe \
-  -config=$CONFIG \
-  -port=$PORT \
-  -mod="$MODS" \
-  -name=server \
-  -noSound
+# 5. Keep the container running
+tail -f /dev/null
+

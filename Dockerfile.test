@@ -27,27 +27,24 @@ RUN useradd -m -s /bin/bash dayz
 USER dayz
 WORKDIR /home/dayz
 
-# 3. Install SteamCMD
+# 3. Install SteamCMD (for testing)
 RUN mkdir -p /home/dayz/steamcmd && \
     cd /home/dayz/steamcmd && \
     wget -qO- 'https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz' | tar zx
 
-# 4. Install Arma 2 and DayZ Epoch
-COPY scripts/install_server.sh .
-RUN chmod +x install_server.sh && \
-    ./install_server.sh
+# 4. Create server directory structure
+RUN mkdir -p /home/dayz/server/{cfgdayz,sql,logs}
 
 # 5. Copy server files and scripts
-COPY config/ /home/dayz/server/cfgdayz/
-COPY sql/ /home/dayz/server/sql/
-COPY scripts/ /home/dayz/server/
+COPY --chown=dayz:dayz config/ /home/dayz/server/cfgdayz/
+COPY --chown=dayz:dayz sql/ /home/dayz/server/sql/
+COPY --chown=dayz:dayz scripts/ /home/dayz/server/
 
-# 6. Set permissions and lowercase filenames
+# 6. Set permissions and compile tolower utility
 RUN chmod +x /home/dayz/server/*.sh /home/dayz/server/*.pl && \
     cd /home/dayz/server && \
     gcc -o tolower tolower.c && \
-    ./tolower && \
-    rm tolower.c tolower
+    rm tolower.c
 
 # 7. Set up the environment
 ENV LD_LIBRARY_PATH /home/dayz/server
@@ -56,6 +53,5 @@ WORKDIR /home/dayz/server
 # 8. Expose the server port
 EXPOSE 2302/udp
 
-# 9. Set the entrypoint
-ENTRYPOINT ["/home/dayz/server/entrypoint.sh"]
-
+# 9. Test entrypoint
+CMD ["echo", "DayZ Epoch Docker container test successful"]

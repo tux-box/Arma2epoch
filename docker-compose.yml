@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:5.7
+    container_name: dayz-epoch-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: dayz_epoch
+      MYSQL_USER: dayz
+      MYSQL_PASSWORD: dayz
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./sql/database.sql:/docker-entrypoint-initdb.d/database.sql
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+
+  dayz-epoch:
+    build: .
+    container_name: dayz-epoch-server
+    depends_on:
+      - mysql
+    ports:
+      - "2302:2302/udp"
+    volumes:
+      - ./config:/home/dayz/server/cfgdayz
+      - ./logs:/home/dayz/server/logs
+      - ./missions:/home/dayz/server/mpmissions
+    environment:
+      - MYSQL_HOST=mysql
+      - MYSQL_USER=dayz
+      - MYSQL_PASSWORD=dayz
+      - MYSQL_DATABASE=dayz_epoch
+    restart: unless-stopped
+
+volumes:
+  mysql_data:

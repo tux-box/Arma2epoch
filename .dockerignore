@@ -1,0 +1,28 @@
+# Git files
+.git
+.gitignore
+
+# Documentation
+README.md
+DOWNLOAD_INFO.md
+
+# Reference files
+reference/
+
+# Runtime directories
+logs/
+missions/
+
+# Docker files
+docker-compose.yml
+.dockerignore
+
+# Temporary files
+*.tmp
+*.log
+*.pid
+
+# Archives
+*.7z
+*.zip
+*.tar.gz
