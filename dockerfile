@@ -34,8 +34,7 @@ RUN mkdir -p /home/dayz/steamcmd && \
 
 # 4. Install Arma 2 and DayZ Epoch
 COPY scripts/install_server.sh .
-RUN chmod +x install_server.sh && \
-    ./install_server.sh
+RUN ./install_server.sh
 
 # 5. Copy server files and scripts
 COPY config/ /home/dayz/server/cfgdayz/
