@@ -33,8 +33,12 @@ RUN mkdir -p /home/dayz/steamcmd && \
     wget -qO- 'https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz' | tar zx
 
 # 4. Install Arma 2 and DayZ Epoch
-RUN chmod +x /scripts/*
+#RUN chmod +x scripts/entrypoint.sh scripts/epoch.sh scripts/install_server.sh scripts/restarter.pl scripts/writer.pl 
+#COPY scripts/install_server.sh .
 COPY scripts/install_server.sh .
+RUN chmod +x install_server.sh && ./install_server.sh
+
+
 RUN ./install_server.sh
 
 # 5. Copy server files and scripts
