@@ -4,8 +4,8 @@
 set -e
 
 # Steam credentials (replace with your own)
-STEAM_USERNAME="your_steam_username"
-STEAM_PASSWORD="your_steam_password"
+STEAM_USERNAME=""
+STEAM_PASSWORD=""
 
 # Arma 2 App IDs
 APP_ID_ARMA2=33900
@@ -22,8 +22,8 @@ INSTALL_DIR="/home/dayz/server"
 
 # 1. Install Arma 2 using SteamCMD
 echo "Installing Arma 2..."
-/home/dayz/steamcmd/steamcmd.sh +login $STEAM_USERNAME $STEAM_PASSWORD \
-    +force_install_dir $INSTALL_DIR \
+/home/dayz/steamcmd/steamcmd.sh +force_install_dir $INSTALL_DIR \
+    +login $STEAM_USERNAME $STEAM_PASSWORD \
     +@sSteamCmdForcePlatformType windows \
     +app_update $APP_ID_ARMA2 validate \
     +app_update $APP_ID_ARMA2_OA validate \
